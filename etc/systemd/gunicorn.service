@@ -3,7 +3,7 @@ Description=gunicorn daemon
 After=network.target
 
 [Service]
-User=ubuntu
+User=www-data
 Group=www-data
 WorkingDirectory=/home/ubuntu/working/live_view
 ExecStart=/usr/local/bin/gunicorn --reload --bind localhost:8000 live_view.wsgi
