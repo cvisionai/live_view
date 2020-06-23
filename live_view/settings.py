@@ -124,3 +124,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/html/static'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+MEDIA_ROOT = '/var/www/html/media'
