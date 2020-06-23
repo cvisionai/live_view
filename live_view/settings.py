@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
+import json
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,12 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'j^&$eh1*5j^t65#0^9va##&$%+mz)8fyu5p)qu@x#_6%27z94j'
+with open('/etc/live-view.json','r') as key_file:
+    secrets = json.load(key_file)
+    SECRET_KEY = secrets['key']
+    ALLOWED_HOSTS = secrets['allowed_hosts']
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = secrets.get('debug',False)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = '/'
 
 # Application definition
