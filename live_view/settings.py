@@ -20,14 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open('/etc/live-view.json','r') as key_file:
+with open(os.path.join(BASE_DIR,"live-view.json"),'r') as key_file:
     secrets = json.load(key_file)
     SECRET_KEY = secrets['key']
     ALLOWED_HOSTS = secrets['allowed_hosts']
     # SECURITY WARNING: don't run with debug turned on in production!
-    DEBUG = secrets.get('debug',False)
-
-
+    DEBUG = secrets.get('debug',True)
+    DATABASE_PATH = secrets.get('db_file', os.path.join(BASE_DIR, 'db.sqlite3'))
+    MEDIA_ROOT = secrets.get('media_root', '/var/www/html/media')
+    STATIC_ROOT = secrets.get('static_root', '/var/www/html/static')
 LOGIN_REDIRECT_URL = '/'
 
 # Application definition
@@ -40,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'main'
+    'main',
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -80,7 +83,7 @@ WSGI_APPLICATION = 'live_view.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': DATABASE_PATH,
     }
 }
 
@@ -120,8 +123,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/html/static'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-MEDIA_ROOT = '/var/www/html/media'
+
