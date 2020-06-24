@@ -27,7 +27,7 @@ with open(os.path.join(BASE_DIR,"live-view.json"),'r') as key_file:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = secrets.get('debug',True)
     DATABASE_PATH = secrets.get('db_file', os.path.join(BASE_DIR, 'db.sqlite3'))
-    MEDIA_ROOT = secrets.get('media_root', '/var/www/html/media')
+    MEDIA_ROOT = secrets.get('media_root', '/var/www/media')
     STATIC_ROOT = secrets.get('static_root', '/var/www/html/static')
 LOGIN_REDIRECT_URL = '/'
 
