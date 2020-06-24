@@ -9,6 +9,5 @@ urlpatterns = [
     path('status',views.status,name='status'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('rest/Stations/', StationList.as_view(), name='station_list'),
-    path('rest/StationImage/<int:station_pk>', StationImage.as_view(), name='station_image')
-
+    path('rest/StationImage/<int:station_pk>.jpg', StationImage.as_view(), name='station_image')
     ]

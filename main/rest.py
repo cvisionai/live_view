@@ -18,6 +18,5 @@ class StationImage(APIView):
             with open(station_obj.image.path, 'rb') as image_f:
                 return Response(image_f.read())
         else:
-            with open(os.path.join(settings.MEDIA_ROOT,"no_file_here.jpg"), 'rb') as image_f:
+            with open(os.path.join(settings.MEDIA_ROOT,"no_data_available.jpg"), 'rb') as image_f:
                 return Response(image_f.read())
-
