@@ -9,6 +9,9 @@ from .models import *
 from .serializers import *
 from .renderers import *
 
+import datetime
+STALE_THRESHOLD = datetime.timedelta(minutes=2)
+
 import io
 
 class StationList(generics.ListAPIView):
@@ -22,6 +25,13 @@ class StationImage(APIView):
     renderer_classes = [JpegRenderer]
     def get(self, request, station_pk, format=None):
         station_obj = Station.objects.get(pk=station_pk)
+
+
+        if station_obj.last_image:
+            time_delta = timezone.now() - station_obj.last_image
+            if time_delta > STALE_THRESHOLD:
+                station_obj.image.delete()
+
         if station_obj.image:
             with open(station_obj.image.path, 'rb') as image_f:
                 return Response(image_f.read())
