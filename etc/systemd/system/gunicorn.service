@@ -6,7 +6,7 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=/home/ubuntu/working/live_view
-ExecStart=/usr/local/bin/gunicorn --reload --bind localhost:8000 live_view.wsgi
+ExecStart=/usr/local/bin/gunicorn --timeout 600 --workers 4 --reload --bind localhost:8000 live_view.wsgi
 Restart=Always
 RestartSec=0
 
