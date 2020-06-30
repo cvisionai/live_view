@@ -7,5 +7,6 @@ class Station(models.Model):
     last_image = models.DateTimeField(blank=True,null=True)
     space_available = models.FloatField(blank=True,null=True)
     image = models.FileField(null=True, blank=True)
+    maintenance_required = models.IntegerField(default=0)
 
 admin.site.register(Station)

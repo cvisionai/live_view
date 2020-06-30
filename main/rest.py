@@ -10,7 +10,7 @@ from .serializers import *
 from .renderers import *
 
 import datetime
-STALE_THRESHOLD = datetime.timedelta(minutes=2)
+STALE_THRESHOLD = datetime.timedelta(minutes=3)
 
 import io
 
