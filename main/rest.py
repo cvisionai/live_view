@@ -10,7 +10,7 @@ from .serializers import *
 from .renderers import *
 
 import datetime
-STALE_THRESHOLD = datetime.timedelta(minutes=3)
+STALE_THRESHOLD = datetime.timedelta(minutes=5)
 
 import io
 
@@ -18,8 +18,23 @@ class StationList(generics.ListAPIView):
     queryset = Station.objects.all()
     serializer_class = StationSerializer
 
-class StationStatus(APIView):
-    pass
+class StationInfo(APIView):
+    queryset = Station.objects.all()
+    serializer_class = StationSerializer
+    def get(self, request, station_pk, format=None):
+        station_obj = Station.objects.get(pk=station_pk)
+        serializer = StationSerializer(station_obj)
+        serializer.context['view'] = self
+        return Response(serializer.data)
+
+    def post(self, request, station_pk, format=None):
+        station_obj = Station.objects.get(pk=station_pk)
+        station_obj.space_available = request.data['space_available']
+        station_obj.last_updated = timezone.now()
+        station_obj.save()
+        serializer = StationSerializer(station_obj)
+        serializer.context['view'] = self
+        return Response(serializer.data)
 
 class StationImage(APIView):
     renderer_classes = [JpegRenderer]

@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect,render
 from django.http import HttpResponse
 from django.views import View
 
@@ -11,4 +11,5 @@ class MainRedirect(View):
 
 # Create your views here.
 def status(request):
-    return HttpResponse("Hello World")
+    return render(request = request,
+                  template_name='status.html')
