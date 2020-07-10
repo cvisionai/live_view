@@ -30,6 +30,10 @@ with open(os.path.join(BASE_DIR,"live-view.json"),'r') as key_file:
     DATABASE_PATH = secrets.get('db_file', os.path.join(BASE_DIR, 'db.sqlite3'))
     MEDIA_ROOT = secrets.get('media_root', '/var/www/media')
     STATIC_ROOT = secrets.get('static_root', '/var/www/html/static')
+    TATOR_HOST = secrets.get('tator_host', None)
+    TATOR_TOKEN = secrets.get('tator_token', None)
+    TATOR_TYPE = secrets.get('tator_type', None)
+    TATOR_PROJECT = secrets.get('tator_project', None)
 LOGIN_REDIRECT_URL = '/'
 
 # Application definition
@@ -137,3 +141,38 @@ USE_TZ = True
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Turn on logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} "{message}"',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        # this is for django internals
+        'django': {
+            'handlers': ['console',],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        #This is for our application
+        'main': {
+            'handlers': ['console',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

@@ -9,10 +9,15 @@ from .models import *
 from .serializers import *
 from .renderers import *
 
+from ipware import get_client_ip
+import logging
+logger = logging.getLogger(__name__)
+
 import datetime
 STALE_THRESHOLD = datetime.timedelta(minutes=5)
 
 import io
+import tator
 
 class StationList(generics.ListAPIView):
     queryset = Station.objects.all()
@@ -28,6 +33,8 @@ class StationInfo(APIView):
         return Response(serializer.data)
 
     def post(self, request, station_pk, format=None):
+        ip,routable=get_client_ip(request)
+        logger.info(f"Station {station_pk} @ {ip}")
         station_obj = Station.objects.get(pk=station_pk)
         station_obj.space_available = request.data['space_available']
         station_obj.last_updated = timezone.now()
@@ -58,9 +65,17 @@ class StationImage(APIView):
         if request.content_type != "image/jpeg":
             raise ValidationError("Required to be an image")
         station_obj = Station.objects.get(pk=station_pk)
-        image_name = f"{station_obj.pk}_{station_obj.name}.jpg"
+        image_name = f"{station_obj.pk}_{station_obj.name}_{timezone.now()}.jpg"
+        if station_obj.image:
+            station_obj.image.delete()
         station_obj.image.save(image_name, io.BytesIO(request.body))
         station_obj.last_image = timezone.now()
         station_obj.save()
+        if settings.TATOR_HOST:
+            api = tator.get_api(settings.TATOR_HOST, settings.TATOR_TOKEN)
+            path = os.path.join(settings.MEDIA_ROOT, station_obj.image.name)
+            tator_image = f"{timezone.now()}.jpg"
+            for _ in tator.util.upload_media(api, settings.TATOR_TYPE, path=path, section=f"{station_obj.name} LiveView", fname=tator_image):
+                pass
         self.request.accepted_renderer = JSONRenderer()
         return Response({"message": "Image Updated"})
