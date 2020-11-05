@@ -14,7 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 import datetime
-STALE_THRESHOLD = datetime.timedelta(minutes=5)
+STALE_THRESHOLD = datetime.timedelta(minutes=10)
 
 import io
 import tator
@@ -36,7 +36,27 @@ class StationInfo(APIView):
         ip,routable=get_client_ip(request)
         logger.info(f"Station {station_pk} @ {ip}")
         station_obj = Station.objects.get(pk=station_pk)
-        station_obj.space_available = request.data['space_available']
+        station_obj.space_available = request.data.get('space_available',-1.0)
+        station_obj.last_updated = timezone.now()
+        station_obj.save()
+        serializer = StationSerializer(station_obj)
+        serializer.context['view'] = self
+        return Response(serializer.data)
+
+class StationInfoByName(APIView):
+    queryset = Station.objects.all()
+    serializer_class = StationSerializer
+    def get(self, request, station_name, format=None):
+        station_obj = Station.objects.get(name=station_name)
+        serializer = StationSerializer(station_obj)
+        serializer.context['view'] = self
+        return Response(serializer.data)
+
+    def post(self, request, station_name, format=None):
+        ip,routable=get_client_ip(request)
+        logger.info(f"Station {station_name} @ {ip}")
+        station_obj = Station.objects.get(name=station_name)
+        station_obj.space_available = request.data.get('space_available',-1)
         station_obj.last_updated = timezone.now()
         station_obj.save()
         serializer = StationSerializer(station_obj)
