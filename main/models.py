@@ -8,5 +8,8 @@ class Station(models.Model):
     space_available = models.FloatField(blank=True,null=True)
     image = models.FileField(null=True, blank=True)
     maintenance_required = models.IntegerField(default=0)
+    version = models.CharField(max_length=80, blank=True,null=True)
+    def __str__(self):
+        return f"{self.name} | {self.pk} | {self.maintenance_required}"
 
 admin.site.register(Station)

@@ -17,4 +17,4 @@ class StationSerializer(serializers.ModelSerializer):
         return self.context['view'].request.build_absolute_uri(url)
     class Meta:
         model = Station
-        fields = ['id', 'name', 'last_updated', 'last_image', 'space_available', 'maintenance_required', 'image']
+        fields = ['id', 'name', 'last_updated', 'last_image', 'space_available', 'maintenance_required', 'image', 'version']
