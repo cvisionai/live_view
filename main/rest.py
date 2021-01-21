@@ -37,6 +37,7 @@ class StationInfo(APIView):
         logger.info(f"Station {station_pk} @ {ip}")
         station_obj = Station.objects.get(pk=station_pk)
         station_obj.space_available = request.data.get('space_available',-1.0)
+        station_obj.version = request.data.get('version','unknown')
         station_obj.last_updated = timezone.now()
         station_obj.save()
         serializer = StationSerializer(station_obj)
@@ -58,6 +59,7 @@ class StationInfoByName(APIView):
         station_obj = Station.objects.get(name=station_name)
         station_obj.space_available = request.data.get('space_available',-1)
         station_obj.last_updated = timezone.now()
+        station_obj.version = request.data.get('version','unknown')
         station_obj.save()
         serializer = StationSerializer(station_obj)
         serializer.context['view'] = self
