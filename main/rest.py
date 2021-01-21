@@ -20,7 +20,7 @@ import io
 import tator
 
 class StationList(generics.ListAPIView):
-    queryset = Station.objects.all()
+    queryset = Station.objects.all().order_by('name')
     serializer_class = StationSerializer
 
 class StationInfo(APIView):
