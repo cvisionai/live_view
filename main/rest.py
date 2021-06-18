@@ -93,11 +93,12 @@ class StationImage(APIView):
         station_obj.image.save(image_name, io.BytesIO(request.body))
         station_obj.last_image = timezone.now()
         station_obj.save()
-        if settings.TATOR_HOST:
-            api = tator.get_api(settings.TATOR_HOST, settings.TATOR_TOKEN)
-            path = os.path.join(settings.MEDIA_ROOT, station_obj.image.name)
-            tator_image = f"{timezone.now()}.jpg"
-            for _ in tator.util.upload_media(api, settings.TATOR_TYPE, path=path, section=f"{station_obj.name} LiveView", fname=tator_image):
-                pass
+        # Disable image push
+        #if settings.TATOR_HOST:
+        #    api = tator.get_api(settings.TATOR_HOST, settings.TATOR_TOKEN)
+        #    path = os.path.join(settings.MEDIA_ROOT, station_obj.image.name)
+        #    tator_image = f"{timezone.now()}.jpg"
+        #    for _ in tator.util.upload_media(api, settings.TATOR_TYPE, path=path, section=f"{station_obj.name} LiveView", fname=tator_image):
+        #        pass
         self.request.accepted_renderer = JSONRenderer()
         return Response({"message": "Image Updated"})
