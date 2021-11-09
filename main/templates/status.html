@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+
+{% block head %}
+<title>LiveView | System Status </title>
+<style>
+ .flex-container {
+     display: flex;
+     width: 100%;
+ }
+
+ .navbar {
+     width: 30%;
+     min-height: 200px;
+     min-width: 400px;
+     border: 1px solid var(--gray-dark);
+     display: flex;
+     flex-direction: column;
+     justify-content: start;
+ }
+
+ .nav-item {
+     background: var(--primary);
+     border: 1px solid var(--gray-dark);
+     margin: 5px;
+     width: 90%;
+     min-height: 100px;
+ }
+
+ .nav-item-selected {
+     border: 1px solid var(--info);
+ }
+
+ .nav-item:hover {
+     background: var(--secondary);
+ }
+
+ .img-display {
+     width: 100%;
+     min-height: 200px;
+     border: 1px solid var(--gray-dark);
+ }
+</style>
+
+{% endblock head %}
+
+{% block body %}
+<script src="/static/main.js"> </script>
+<div class="flex-container">
+    <div id="station_list" class="navbar">
+    </div>
+    <div id="station_display" class="img-display">
+        <h1 id="station_name"></h1>
+        <img id="station_image"></img>
+    </div>
+</div>
+
+{% endblock %}

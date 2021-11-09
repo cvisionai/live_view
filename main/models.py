@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib import admin
 
+import datetime
+
 class Station(models.Model):
     name = models.CharField(max_length=80)
     last_updated = models.DateTimeField(blank=True,null=True)
@@ -10,6 +12,6 @@ class Station(models.Model):
     maintenance_required = models.IntegerField(default=0)
     version = models.CharField(max_length=80, blank=True,null=True)
     def __str__(self):
-        return f"{self.name} | {self.pk} | {self.maintenance_required}"
+        return f"{self.name} | {self.pk} | {self.maintenance_required} | {self.last_updated}"
 
 admin.site.register(Station)
