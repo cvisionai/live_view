@@ -39,6 +39,8 @@ class StationInfo(APIView):
         station_obj.space_available = request.data.get('space_available',-1.0)
         station_obj.version = request.data.get('version','unknown')
         station_obj.last_updated = timezone.now()
+        station_obj.cell_percentage = request.data.get('cell_percentage', None)
+        station_obj.cell_status = request.data.get('cell_status', None)
         station_obj.save()
         serializer = StationSerializer(station_obj)
         serializer.context['view'] = self
@@ -60,6 +62,8 @@ class StationInfoByName(APIView):
         station_obj.space_available = request.data.get('space_available',-1)
         station_obj.last_updated = timezone.now()
         station_obj.version = request.data.get('version','unknown')
+        station_obj.cell_percentage = request.data.get('cell_percentage', None)
+        station_obj.cell_status = request.data.get('cell_status', None)
         station_obj.save()
         serializer = StationSerializer(station_obj)
         serializer.context['view'] = self
