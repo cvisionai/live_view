@@ -9,6 +9,7 @@ urlpatterns = [
     path('status',views.status,name='status'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('rest/Stations/', StationList.as_view(), name='station_list'),
+    path('rest/SMSStatus/',  SMSStatus.as_view(), name='sms_status'),
     path('rest/StationImage/<int:station_pk>.jpg', StationImage.as_view(), name='station_image'),
     path('rest/StationInfo/<int:station_pk>', StationInfo.as_view(), name='station_info'),
     path('rest/StationInfoByName/<str:station_name>', StationInfoByName.as_view(), name='station_info_by_name')

@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import BaseRenderer,JSONRenderer
+from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from django.conf import settings
 from django.utils import timezone
@@ -8,6 +9,8 @@ from django.core.exceptions import *
 from .models import *
 from .serializers import *
 from .renderers import *
+import datetime
+import pytz
 
 from ipware import get_client_ip
 import logging
@@ -17,11 +20,40 @@ import datetime
 STALE_THRESHOLD = datetime.timedelta(minutes=10)
 
 import io
-import tator
+from twilio.twiml.messaging_response import MessagingResponse
 
 class StationList(generics.ListAPIView):
     queryset = Station.objects.all().order_by('name')
     serializer_class = StationSerializer
+
+class XMLRenderer(BaseRenderer):
+    media_type = "text/xml"
+    format = "xml"
+
+    def render(self, msg, media_type=None, renderer_context=None):
+        """Flattens list of objects into a CSV"""
+        return msg
+
+class SMSStatus(APIView):
+    queryset = Station.objects.all().order_by('name')
+    renderer_classes  =  [XMLRenderer]
+    permission_classes = [AllowAny]
+
+    def get(self,  request,  format='xml'):
+        stations = Station.objects.all()
+        message=""
+        for station in stations:
+            if station.name.find('-dev') > 0:
+                continue
+            delta = pytz.utc.localize(datetime.datetime.utcnow())-station.last_updated
+            delta_hours =  delta.total_seconds() / 60 / 60
+            if delta_hours < 60:
+                message += f"{station.name}: Good | "
+            else:
+                message += f"{station.name}: Last seen {round(delta_hours,2)}  hours ago. | "
+        response = MessagingResponse()
+        msg = response.message(message)
+        return Response(str(response))
 
 class StationInfo(APIView):
     queryset = Station.objects.all()
